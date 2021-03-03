@@ -1,24 +1,36 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.http import Http404
 from django.shortcuts import render, redirect
 
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 
 
 def base(request):
     if request.user.is_authenticated:
-        if request.user.is_student:
-            print('user is student')
-        else:
-            print('user is teacher')
         user = request.user.username
     else:
         user = None
-    return render(request, 'panel/base.html', context={'user': user})
+    return render(request, 'account/base.html', context={'user': user})
 
 
-def login(request):
-    pass
+def login_account(request):
+    if request.method == 'GET':
+        form = LoginForm()
+    elif request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+        else:
+            form = LoginForm()
+    else:
+        return Http404
+
+    return render(request, 'account/login.html', context={'form': form})
 
 
 def signup(request):
@@ -40,13 +52,10 @@ def signup(request):
     else:
         return Http404
 
-    return render(request, 'panel/signup.html', context={'form': form})
+    return render(request, 'account/signup.html', context={'form': form})
 
-def teacher_panel(request):
+
+def logout_account(request):
     if request.user.is_authenticated:
-        if request.user.is_student:
-            return Http404
-        else:
-            return render(request, 'panel/base.html', context={'user': request.user})
-    else:
-        redirect('login')
+        logout(request)
+    return redirect('login')
