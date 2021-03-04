@@ -1,0 +1,53 @@
+{% extends 'accountPanel/base.html' %}
+
+{% block form %}
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">ورود کاربر</p>
+
+      <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+              <div class="input-group mb-3">
+                  <input type="{{ field.name }}" name="{{ field.name }}" class="form-control" placeholder="{{ field.label }}">
+                  <div class="input-group-append">
+                    <div class="input-group-text">
+                      <span class="fas fa-user"></span>
+                    </div>
+                  </div>
+              </div>
+
+              {% for error in field.errors %}
+                  <a class="text-center"> {{ error }} </a>
+              {% endfor %}
+{#              {% if field.help_text %}#}
+{#                  <a class="text-center"> {{ field.help_text }} </a>#}
+{#              {% endif %}#}
+          {% endfor %}
+
+        <div class="row">
+          <div class="col-3"></div>
+          <!-- /.col -->
+          <div class="col-6">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">ورود به سایت</button>
+          </div>
+          <!-- /.col -->
+          <div class="col-3"></div>
+        </div>
+      </form>
+
+{#      <div class="social-auth-links text-center">#}
+{#        <p>- OR -</p>#}
+{#        <a href="#" class="btn btn-block btn-primary">#}
+{#          <i class="fab fa-facebook mr-2"></i>#}
+{#          Sign up using Facebook#}
+{#        </a>#}
+{#        <a href="#" class="btn btn-block btn-danger">#}
+{#          <i class="fab fa-google-plus mr-2"></i>#}
+{#          Sign up using Google+#}
+{#        </a>#}
+{#      </div>#}
+
+      <br>
+      <a href="{% url 'signup' %}" class="text-center">ساخت اکانت کاربری</a>
+    </div>
+{% endblock %}

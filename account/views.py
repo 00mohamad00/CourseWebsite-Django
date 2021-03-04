@@ -30,7 +30,7 @@ def login_account(request):
     else:
         return Http404
 
-    return render(request, 'account/login.html', context={'form': form})
+    return render(request, 'accountPanel/login.html', context={'form': form})
 
 
 def signup(request):
@@ -45,14 +45,14 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('base')
+            return redirect('index')
         else:
             form = SignUpForm()
 
     else:
         return Http404
 
-    return render(request, 'account/signup.html', context={'form': form})
+    return render(request, 'accountPanel/signup.html', context={'form': form})
 
 
 def logout_account(request):
