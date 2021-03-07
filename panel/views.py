@@ -6,7 +6,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Course, HomeWork, Answer, CourseContent
-from .mixins import FormValidMixin, AccessMixin, VideoValidMixin, AccessStudentMixin, AnswerValidMixin
+from .mixins import FormValidMixin, AccessMixin, VideoValidMixin, AccessStudentMixin, AnswerValidMixin, CourseValidMixin
 
 
 @login_required
@@ -22,6 +22,12 @@ def courses(request):
 
     return render(request, 'panel/courses.html', context={'courses_as_teacher': courses_as_teacher,
                                                           'courses_as_student': courses_as_student})
+
+
+class CourseCreate(LoginRequiredMixin, CourseValidMixin, CreateView):
+    model = Course
+    fields = ['title', 'description']
+    template_name = 'panel/course_create.html'
 
 
 class CourseAsStudnet(AccessStudentMixin, DetailView):

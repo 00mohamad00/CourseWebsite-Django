@@ -1,10 +1,13 @@
 from django.urls import path
 from .views import index, courses, HomeworkCreate, HomeworkUpdate, HomeworkDelete,\
-    HomeworkAnswers, AnswerScoreUpdate, CourseAsTeacher, ContentCreate, ContentDelete, CourseAsStudnet, HomeworkView, AnswerUpdate
+    HomeworkAnswers, AnswerScoreUpdate, CourseAsTeacher, ContentCreate, ContentDelete, CourseAsStudnet, HomeworkView,\
+    AnswerUpdate, CourseCreate
 
 urlpatterns = [
     path('', index, name='index'),
     path('courses/', courses, name='courses'),
+
+    path('course/add/', CourseCreate.as_view(), name='course_create'),
 
     path('course/t/<int:pk>/', CourseAsTeacher.as_view(), name='course_as_teacher'),
     path('course/t/<int:pk>/homework/add/', HomeworkCreate.as_view(), name='homework_create'),

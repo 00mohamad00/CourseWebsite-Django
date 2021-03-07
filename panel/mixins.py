@@ -25,6 +25,15 @@ class AccessStudentMixin():
         return super().dispatch(request)
 
 
+class CourseValidMixin():
+    def form_valid(self, form):
+        self.obj = form.save(commit=False)
+        self.obj.teacher = self.request.user
+
+        response = super().form_valid(form)
+        return response
+
+
 class FormValidMixin():
     def form_valid(self, form):
         course = get_object_or_404(Course, pk=self.kwargs['pk'])

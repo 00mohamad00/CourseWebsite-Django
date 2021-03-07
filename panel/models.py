@@ -8,10 +8,13 @@ from account.models import Account
 
 
 class Course(models.Model):
-    title = models.CharField(max_length=50, blank=False)
-    description = models.TextField(blank=True)
+    title = models.CharField(max_length=50, blank=False , verbose_name='عنوان کلاس')
+    description = models.TextField(blank=True, verbose_name='توضیحات')
     teacher = models.ForeignKey(Account, on_delete=models.CASCADE)  # TODO: set validator
     students = models.ManyToManyField(Account, related_name='%(class)s_requests_created')
+
+    def get_absolute_url(self):
+        return reverse('course_as_teacher', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.title
