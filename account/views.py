@@ -1,58 +1,25 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
 from .forms import SignUpForm, LoginForm
 
-
-def base(request):
-    if request.user.is_authenticated:
-        user = request.user.username
-    else:
-        user = None
-    return render(request, 'account/base.html', context={'user': user})
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import LoginView
 
 
-def login_account(request):
-    if request.method == 'GET':
-        form = LoginForm()
-    elif request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('index')
-        else:
-            form = LoginForm()
-    else:
-        return Http404
-
-    return render(request, 'accountPanel/login.html', context={'form': form})
+class LoginAccount(SuccessMessageMixin, LoginView):
+    template_name = 'accountPanel/login.html'
+    success_message = 'Welcome to your profile'
 
 
-def signup(request):
-    if request.method == 'GET':
-        form = SignUpForm()
-
-    elif request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('index')
-        else:
-            form = SignUpForm()
-
-    else:
-        return Http404
-
-    return render(request, 'accountPanel/signup.html', context={'form': form})
+class SignUpView(SuccessMessageMixin, CreateView):
+    template_name = 'accountPanel/signup.html'
+    success_url = reverse_lazy('login')
+    form_class = SignUpForm
+    success_message = "Your profile was created successfully"
 
 
 def logout_account(request):
