@@ -25,8 +25,9 @@
                             <tr>
                                 <td>{{ answer.student.get_full_name }}</td>
                                 <td>{{ answer.student.student_id }}</td>
-                                <td>{{ answer.submitted_date }}</td>
+                                <td>{% if answer.submitted_date %}{{ answer.submitted_date }}{% else %}-{% endif %}</td>
                                 <td>
+                                    {% if answer.answer %}
                                     <form method="POST" action="{% url 'homework_answers_update' answer.home_work.course.pk answer.home_work.pk answer.pk %}">
                                         {% csrf_token %}
 
@@ -38,11 +39,26 @@
                                             <input value="{{ answer.score }}" type="number" name="score" class="form-control">
                                         </div>
                                     </form>
+                                    {% else %}
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button type="submit" class="btn btn-danger btn-sm" disabled>ثبت نمره</button>
+                                            </div>
+                                            <!-- /btn-group -->
+                                            <input value="{{ answer.score }}" type="number" name="score" class="form-control" disabled>
+                                        </div>
+                                    {% endif %}
                                 </td>
                                 <td>
-                                    <a href="{{ answer.answer.url }}" target="_blank" type="button" class="btn btn-block btn-success btn-sm">
-                                        <i class="fas fa-download"></i>
-                                    </a>
+                                    {% if answer.answer %}
+                                        <a href="{{ answer.answer.url }}" target="_blank" type="button" class="btn btn-block btn-success btn-sm">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="" type="button" class="btn btn-block btn-success btn-sm">
+                                            بدون فایل
+                                        </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

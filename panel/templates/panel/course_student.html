@@ -1,7 +1,96 @@
 {% extends 'panel/base.html' %}
 
+{% block title %}| {{ course.title }}{% endblock %}
+
 {% block main %}
-    <h1>{{ title }}</h1>
-    <br>
-    <p>{{ description }}</p>
+    <!-- header for introducing course: course name, description, teacher -->
+    <div class="card card-primary">
+        <!-- /.card-header -->
+        <!-- form start -->
+        <div class="card-body">
+            <h1 class="m-0 text-dark">{{ course.title }}</h1>
+            <br>
+            {{ course.description }}
+            <br>
+            <br>
+            <p>نام استاد: {{ course.teacher.get_full_name }}</p>
+        </div>
+        <!-- /.card-body -->
+    </div>
+
+    <h4 class="mb-2 mt-4">محتوا آموزشی</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>توضیحات</th>
+                            <th>تاریخ بارگذاری</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for content in contents %}
+                            <tr>
+                                <td>{{ content.description|striptags }}</td>
+                                <td>{{ content.published_date }}</td>
+                                <td>
+                                    <a href="{{ content.file.url }}" target="_blank" type="button" class="btn btn-block btn-success btn-sm">
+                                        نمایش محتوا
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+
+    <h4 class="mb-2 mt-4">تمارین</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>نام</th>
+                            <th>خلاصه توضیحات</th>
+                            <th>تاریخ بارگذاری</th>
+                            <th>مهلت ارسال</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for homework in homeworks %}
+                            <tr>
+                                <td>{{ homework.name }}</td>
+                                <td>{{ homework.description|striptags|truncatewords:"30" }}</td>
+                                <td>{{ homework.published_date }}</td>
+                                <td>{{ homework.deadline_date }}</td>
+                                <td>
+                                    <a href="{% url 'homework_view' course.pk homework.pk %}" type="button" class="btn btn-block btn-success btn-sm">مشاهده و ارسال پاسخ</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+
 {% endblock %}

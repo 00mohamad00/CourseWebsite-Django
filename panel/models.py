@@ -30,7 +30,6 @@ class CourseContent(models.Model):
         return self.course.title + '٬ ' + strip_tags(self.description)
 
 
-
 class HomeWork(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='درس')
     name = models.CharField(max_length=50, blank=False, verbose_name='نام')
@@ -46,10 +45,10 @@ class HomeWork(models.Model):
 
 
 class Answer(models.Model):
-    answer = models.FileField(upload_to='Answers')  # TODO: need to check
+    answer = models.FileField(upload_to='Answers', null=True, blank=True)  # TODO: need to check
     student = models.ForeignKey(Account, on_delete=models.CASCADE)
     home_work = models.ForeignKey(HomeWork, on_delete=models.CASCADE)
-    submitted_date = models.DateTimeField(auto_now_add=True)
+    submitted_date = models.DateTimeField(null=True, blank=True)
     score = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
