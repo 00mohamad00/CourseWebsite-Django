@@ -1,29 +1,31 @@
 {% extends 'accountPanel/base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block form %}
     <div class="card-body register-card-body">
       <p class="login-box-msg">ثبت نام کاربر</p>
 
       <form method="post">
           {% csrf_token %}
-          {% for field in form %}
-              <div class="input-group mb-3">
-                  <input type="{{ field.widget.type }}" name="{{ field.name }}" class="form-control" placeholder="{{ field.label }}">
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-user"></span>
-                    </div>
-                  </div>
-              </div>
-
-              {% for error in field.errors %}
-                  <a class="text-center"> {{ error }} </a>
-              {% endfor %}
+{#          {% for field in form %}#}
+{#              <div class="input-group mb-3">#}
+{#                  <input type="{{ field.widget.type }}" name="{{ field.name }}" class="form-control" placeholder="{{ field.label }}">#}
+{#                  <div class="input-group-append">#}
+{#                    <div class="input-group-text">#}
+{#                      <span class="fas fa-user"></span>#}
+{#                    </div>#}
+{#                  </div>#}
+{#              </div>#}
+{##}
+{#              {% for error in field.errors %}#}
+{#                  <a class="text-center"> {{ error }} </a>#}
+{#              {% endfor %}#}
 {#              {% if field.help_text %}#}
 {#                  <a class="text-center"> {{ field.help_text }} </a>#}
 {#              {% endif %}#}
-          {% endfor %}
-
+{#          {% endfor %}#}
+          {{ form|crispy }}
         <div class="row">
           <div class="col-3"></div>
           <!-- /.col -->

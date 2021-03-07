@@ -17,6 +17,7 @@ tests/report/
 */migrations
 
 db.sqlite3
+media/
 
 */settings.py
 .DS_Store

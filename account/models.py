@@ -3,6 +3,6 @@ from django.db import models
 
 
 class Account(AbstractUser):
-    student_id = models.IntegerField(blank=True, null=True)  # TODO: set validator
+    student_id = models.IntegerField(blank=True, null=True, verbose_name='شماره دانشجویی')  # TODO: set validator
 
 

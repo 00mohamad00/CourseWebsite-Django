@@ -1,0 +1,53 @@
+{% extends 'panel/base.html' %}
+
+{% block title %}| لیست کلاس ها{% endblock %}
+{% block header %}لیست کلاس ها{% endblock %}
+
+{% block main %}
+    {% if courses_as_teacher %}
+        <h4 class="mb-2 mt-4">کلاس های من به عنوان استاد</h4>
+    {% endif %}
+    <div class="row">
+    {% for course in courses_as_teacher %}
+        <div class="col-lg-3 col-6">
+            <!-- small card -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ course.title }}</h3>
+                    <p>{{ course.teacher.get_full_name }}</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <a href="{% url 'course_as_teacher' course.pk %}" class="small-box-footer">
+                    لینک کلاس <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+
+    {% if courses_as_student %}
+        <h4 class="mb-2 mt-4">کلاس های من به عنوان دانش آموز</h4>
+    {% endif %}
+    <div class="row">
+    {% for course in courses_as_student %}
+        <div class="col-lg-3 col-6">
+            <!-- small card -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ course.title }}</h3>
+                    <p>{{ course.teacher.get_full_name }}</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <a href="{% url 'course_as_student' course.pk %}" class="small-box-footer">
+                    لینک کلاس <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

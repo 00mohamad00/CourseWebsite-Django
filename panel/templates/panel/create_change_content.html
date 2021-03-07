@@ -1,0 +1,56 @@
+{% extends 'panel/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}| {{ course.title }}{% endblock %}
+{% block header %}{{ course.title }}{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title float-left">افزودن محتوا ویدیویی</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form method="post" enctype="multipart/form-data" role="form">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            {{ form.description|as_crispy_field }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.file|as_crispy_field }}
+                            <!-- <input accept="audio/*|video/*|image/*|MIME_type" /> -->
+                            <span class="badge badge-danger">فقط فایل ویدیویی</span>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">آپلود</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+
+{#            <div class="form-group">#}
+{#                <label>Date and time range:</label>#}
+{##}
+{#                <div class="input-group">#}
+{#                    <div class="input-group-prepend">#}
+{#                        <span class="input-group-text"><i class="far fa-clock"></i></span>#}
+{#                    </div>#}
+{#                    <input type="text" class="form-control float-right" id="reservationtime">#}
+{#                </div>#}
+{#                <!-- /.input group -->#}
+{#            </div>#}
+
+        </div>
+
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,108 @@
+{% extends 'panel/base.html' %}
+
+{% block title %}| {{ course.title }}{% endblock %}
+{% block header %}{{ course.title }}{% endblock %}
+
+{% block main %}
+    <h4 class="mb-2 mt-4">تمارین</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>نام</th>
+                            <th>تاریخ بارگذاری</th>
+                            <th>مهلت ارسال</th>
+                            <th>توضیحات</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for homework in homeworks %}
+                            <tr>
+                                <td>{{ homework.name }}</td>
+                                <td>{{ homework.published_date }}</td>
+                                <td>{{ homework.deadline_date }}</td>
+                                <td>{{ homework.description|striptags|truncatewords:"30" }}</td>
+                                <td>
+                                    <a href="{% url 'homework_answers' course.pk homework.pk %}" type="button" class="btn btn-block btn-success btn-sm">نمایش پاسخ ها</a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'homework_update' course.pk homework.pk %}" type="button" class="btn btn-block btn-primary btn-sm">تغییر</a>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{% url 'homework_delete' course.pk homework.pk %}">
+                                        {% csrf_token %}<button href="#" type="submit" class="btn btn-block btn-danger btn-sm">حذف</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+
+        <div class="col-10"></div>
+        <div class="col-2">
+            <a type="button" href="{% url 'homework_create' course.pk %}" class="btn btn-block btn-primary">افزودن تمرین</a>
+        </div>
+    </div>
+
+    <h4 class="mb-2 mt-4">محتوا آموزشی</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>توضیحات</th>
+                            <th>تاریخ بارگذاری</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for content in contents %}
+                            <tr>
+                                <td>{{ content.description|striptags|truncatewords:"30" }}</td>
+                                <td>{{ content.published_date }}</td>
+                                <td>
+                                    <a href="{{ content.file.url }}" target="_blank" type="button" class="btn btn-block btn-success btn-sm">
+                                        نمایش محتوا
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{% url 'content_delete' course.pk content.pk %}">
+                                        {% csrf_token %}<button href="#" type="submit" class="btn btn-block btn-danger btn-sm">حذف</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+
+        <div class="col-10"></div>
+        <div class="col-2">
+            <a type="button" href="{% url 'content_create' course.pk %}" class="btn btn-block btn-primary">افزودن محتوا</a>
+        </div>
+    </div>
+
+{% endblock %}
