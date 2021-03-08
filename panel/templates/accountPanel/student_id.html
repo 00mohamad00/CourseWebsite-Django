@@ -1,0 +1,40 @@
+{% extends 'panel/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}| {{ course.title }}{% endblock %}
+{% block header %}{{ course.title }}{% endblock %}
+
+{% block main %}
+    {#    <h4 class="mb-2 mt-4">افزودن تمرین</h4>#}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title float-left">تغییر شماره دانشجویی</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form method="post" role="form">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="form-group">
+                            {{ form.student_id|as_crispy_field }}
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">ثبت</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card -->
+
+        </div>
+
+    </div>
+{% endblock %}
+
+

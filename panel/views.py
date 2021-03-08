@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Course, HomeWork, Answer, CourseContent
 from .mixins import FormValidMixin, AccessMixin, VideoValidMixin, AccessStudentMixin, AnswerValidMixin, CourseValidMixin
 
+from .functions import download_csv
 
 @login_required
 def index(request):
@@ -28,6 +29,15 @@ class CourseCreate(LoginRequiredMixin, CourseValidMixin, CreateView):
     model = Course
     fields = ['title', 'description']
     template_name = 'panel/course_create.html'
+
+
+class CourseAddStudent(AccessMixin, UpdateView):
+    model = Course
+    fields = ['students']
+    template_name = 'panel/course_add_student.html'
+
+    def get_success_url(self):
+        return reverse_lazy('course_as_teacher', kwargs={'pk': self.kwargs['pk']})
 
 
 class CourseAsStudnet(AccessStudentMixin, DetailView):
@@ -189,4 +199,13 @@ class ContentDelete(AccessMixin, DeleteView):
 
     def get_object(self):
         return CourseContent.objects.get(pk=self.kwargs['pk2'])
+
+
+def download_csv_view(request, pk, pk2):
+    answers = Answer.objects.filter(home_work=pk2).all()
+    data = download_csv(answers)
+
+    return HttpResponse(data, content_type='text/csv')
+
+
 

@@ -28,17 +28,17 @@
                                 <td>{% if answer.submitted_date %}{{ answer.submitted_date }}{% else %}-{% endif %}</td>
                                 <td>
                                     {% if answer.answer %}
-                                    <form method="POST" action="{% url 'homework_answers_update' answer.home_work.course.pk answer.home_work.pk answer.pk %}">
-                                        {% csrf_token %}
+                                        <form method="POST" action="{% url 'homework_answers_update' answer.home_work.course.pk answer.home_work.pk answer.pk %}">
+                                            {% csrf_token %}
 
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <button type="submit" class="btn btn-danger btn-sm">ثبت نمره</button>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button type="submit" class="btn btn-danger btn-sm">ثبت نمره</button>
+                                                </div>
+                                                <!-- /btn-group -->
+                                                <input value="{{ answer.score }}" type="number" name="score" class="form-control">
                                             </div>
-                                            <!-- /btn-group -->
-                                            <input value="{{ answer.score }}" type="number" name="score" class="form-control">
-                                        </div>
-                                    </form>
+                                        </form>
                                     {% else %}
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
@@ -67,6 +67,12 @@
                     </table>
                 </div>
                 <!-- /.card-body -->
+            </div>
+            <div class="row">
+                <div class="col-10"></div>
+                <div class="col-2">
+                    <a type="button" href="{% url 'answers_download' course.pk homework.pk %}" class="btn btn-block btn-primary">دانلود</a>
+                </div>
             </div>
             <!-- /.card -->
         </div>
