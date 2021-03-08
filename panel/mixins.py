@@ -1,10 +1,20 @@
 from datetime import datetime
-
+from notification.views import create_notification_for_many
+from notification.models import Notification
 from django.utils import timezone
 
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from .models import Course, HomeWork
+
+
+class NotificationMixin():
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['notifications'] = Notification.objects.filter(person=self.request.user).all()
+
+        return context
 
 
 class AccessMixin():
@@ -39,9 +49,11 @@ class FormValidMixin():
         course = get_object_or_404(Course, pk=self.kwargs['pk'])
         self.obj = form.save(commit=False)
         self.obj.course = course
-        response = super().form_valid(form)
+        self.obj.save()
 
-        return response
+        create_notification_for_many(course.students.all(), title='تمرین جدید', text=self.obj.name)
+
+        return HttpResponseRedirect(self.obj.get_absolute_url())
 
 
 class AnswerValidMixin():

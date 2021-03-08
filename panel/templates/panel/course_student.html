@@ -10,7 +10,7 @@
         <div class="card-body">
             <h1 class="m-0 text-dark">{{ course.title }}</h1>
             <br>
-            {{ course.description }}
+            {{ course.description|safe }}
             <br>
             <br>
             <p>نام استاد: {{ course.teacher.get_full_name }}</p>

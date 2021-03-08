@@ -5,8 +5,11 @@ from django.utils import timezone
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
+
+from notification.models import Notification
 from .models import Course, HomeWork, Answer, CourseContent
-from .mixins import FormValidMixin, AccessMixin, VideoValidMixin, AccessStudentMixin, AnswerValidMixin, CourseValidMixin
+from .mixins import FormValidMixin, AccessMixin, VideoValidMixin, AccessStudentMixin, AnswerValidMixin, CourseValidMixin,\
+    NotificationMixin
 
 from .functions import download_csv
 
@@ -18,20 +21,22 @@ def index(request):
 @login_required
 def courses(request):
     courses_as_teacher = Course.objects.filter(teacher=request.user)
-
     courses_as_student = Course.objects.filter(students=request.user)
 
+    notification = Notification.objects.filter(person=request.user).all()
+
     return render(request, 'panel/courses.html', context={'courses_as_teacher': courses_as_teacher,
-                                                          'courses_as_student': courses_as_student})
+                                                          'courses_as_student': courses_as_student,
+                                                          'notifications': notification})
 
 
-class CourseCreate(LoginRequiredMixin, CourseValidMixin, CreateView):
+class CourseCreate(LoginRequiredMixin, CourseValidMixin, NotificationMixin, CreateView):
     model = Course
     fields = ['title', 'description']
     template_name = 'panel/course_create.html'
 
 
-class CourseAddStudent(AccessMixin, UpdateView):
+class CourseAddStudent(AccessMixin, NotificationMixin, UpdateView):
     model = Course
     fields = ['students']
     template_name = 'panel/course_add_student.html'
@@ -40,7 +45,7 @@ class CourseAddStudent(AccessMixin, UpdateView):
         return reverse_lazy('course_as_teacher', kwargs={'pk': self.kwargs['pk']})
 
 
-class CourseAsStudnet(AccessStudentMixin, DetailView):
+class CourseAsStudnet(AccessStudentMixin, NotificationMixin, DetailView):
     model = Course
     template_name = 'panel/course_student.html'
     context_object_name = 'course'
@@ -56,7 +61,7 @@ class CourseAsStudnet(AccessStudentMixin, DetailView):
         return context
 
 
-class HomeworkView(AccessStudentMixin, DetailView):
+class HomeworkView(AccessStudentMixin, NotificationMixin, DetailView):
     model = HomeWork
     template_name = 'panel/homework_view.html'
     context_object_name = 'homework'
@@ -77,7 +82,7 @@ class HomeworkView(AccessStudentMixin, DetailView):
         return context
 
 
-class AnswerUpdate(AccessStudentMixin, AnswerValidMixin, UpdateView):
+class AnswerUpdate(AccessStudentMixin, AnswerValidMixin, NotificationMixin, UpdateView):
     model = Answer
     fields = ['answer']
 
@@ -91,7 +96,7 @@ class AnswerUpdate(AccessStudentMixin, AnswerValidMixin, UpdateView):
         return Answer.objects.get(pk=self.kwargs['pk3'])
 
 
-class CourseAsTeacher(AccessMixin, DetailView):
+class CourseAsTeacher(AccessMixin, NotificationMixin, DetailView):
     model = Course
     template_name = 'panel/course_teacher.html'
     context_object_name = 'course'
@@ -107,13 +112,13 @@ class CourseAsTeacher(AccessMixin, DetailView):
         return context
 
 
-class HomeworkCreate(AccessMixin, FormValidMixin, CreateView):
+class HomeworkCreate(AccessMixin, FormValidMixin, NotificationMixin, CreateView):
     model = HomeWork
     fields = ['name', 'description', 'deadline_date']
     template_name = 'panel/create_change_homework.html'
 
 
-class HomeworkUpdate(AccessMixin, FormValidMixin, UpdateView):
+class HomeworkUpdate(AccessMixin, FormValidMixin, NotificationMixin, UpdateView):
     model = HomeWork
     fields = ['name', 'description', 'deadline_date']
     template_name = 'panel/create_change_homework.html'
@@ -150,7 +155,7 @@ def submit_none_answers(homework: HomeWork, course: Course):
             answer.save()
 
 
-class HomeworkAnswers(AccessMixin, ListView):
+class HomeworkAnswers(AccessMixin, NotificationMixin, ListView):
     model = HomeWork
     template_name = 'panel/homework_answers.html'
     context_object_name = 'answers'
@@ -181,7 +186,7 @@ class AnswerScoreUpdate(AccessMixin, UpdateView):
         return Answer.objects.get(pk=self.kwargs['pk3'])
 
 
-class ContentCreate(AccessMixin, VideoValidMixin, CreateView):
+class ContentCreate(AccessMixin, VideoValidMixin, NotificationMixin, CreateView):
     model = CourseContent
     fields = ['description', 'file']
     template_name = 'panel/create_change_content.html'
