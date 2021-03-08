@@ -63,6 +63,10 @@ class AnswerValidMixin():
         if homework.deadline_date < timezone.now():
             raise Http404
 
+        file = form.cleaned_data['answer']
+        if 'pdf' not in file.content_type:
+            raise Http404
+
         self.obj = form.save(commit=False)
         self.obj.submitted_date = timezone.now()
         self.obj.score = None
